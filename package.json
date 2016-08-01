@@ -17,6 +17,7 @@
     "isomorphic-fetch": "^2.2.1",
     "knex": "^0.11.9",
     "lodash": "^4.13.1",
+    "log4js": "^0.6.38",
     "mysql2": "^0.15.8",
     "react": "15.1.0",
     "react-bootstrap": "0.29.5",
