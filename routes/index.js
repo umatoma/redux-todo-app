@@ -1,10 +1,11 @@
 'use strict';
 
 const path = require('path');
-const express = require('express');
+const Express = require('express');
 const ApiTodosCtrl = require('../controllers/api-todos.js');
 const ApiUsersCtrl = require('../controllers/api-users.js');
-const router = express.Router();
+
+const router = Express.Router(); // eslint-disable-line new-cap
 
 /**
  * Actions:
@@ -32,7 +33,7 @@ router.all('/api/*', (req, res) => {
       message: 'Not Found'
     }
   });
-})
+});
 
 router.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
