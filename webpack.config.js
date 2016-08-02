@@ -1,5 +1,7 @@
+/* eslint-disable import/no-extraneous-dependencies */
 'use strict';
 
+const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -7,18 +9,18 @@ module.exports = [
   {
     name: 'app',
     entry: [
-      './assets/index.js',
-      './assets/index.sass',
+      './assets/index.jsx',
+      './assets/index.sass'
     ],
     output: {
-      path: __dirname + '/public/build',
+      path: path.join(__dirname, '/public/build'),
       publicPath: '/build/',
       filename: 'app.bundle.js'
     },
     module: {
       loaders: [
         {
-          test: /\.js$/,
+          test: /\.(js|jsx)$/,
           loaders: ['babel'],
           exclude: /node_modules/,
           include: __dirname
@@ -55,7 +57,7 @@ module.exports = [
       'es5-shim/es5-sham'
     ],
     output: {
-      path: __dirname + '/public/build',
+      path: path.join(__dirname, '/public/build'),
       publicPath: '/build/',
       filename: 'vendor.bundle.js'
     }

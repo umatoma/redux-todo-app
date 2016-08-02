@@ -1,9 +1,10 @@
 module.exports = {
   "env": {
+      "browser": true,
       "es6": true,
       "node": true
   },
-  "extends": "airbnb-base",
+  "extends": "airbnb",
   "rules": {
     "strict": "off",
     "comma-dangle": ["error", "never"],
