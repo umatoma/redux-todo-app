@@ -8,7 +8,7 @@ module.exports.showCurrent = (req, res) => {
     .setDebug(true)
     .setMaxTimes(5)
     .setInterval(10)
-    .execute(() => knex.first('*').from('users').where('id', 1))
+    .execute(() => knex.first('*').from('users').where('id', 100))
     .then((user) => {
       if (user) {
         res.json(user);
