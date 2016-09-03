@@ -4,6 +4,13 @@ module.exports = {
       "es6": true,
       "node": true
   },
+  "globals": {
+    "describe": true,
+    "context": true,
+    "it": true,
+    "beforeEach": true,
+    "afterEach": true
+  },
   "extends": "airbnb",
   "rules": {
     "strict": "off",
