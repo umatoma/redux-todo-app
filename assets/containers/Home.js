@@ -11,7 +11,7 @@ import * as actions from '../actions'
 class Home extends React.Component {
 
   componentDidMount() {
-    this.props.fetchTodos()
+    this.props.requestFetchTodos();
   }
 
   render() {

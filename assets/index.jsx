@@ -6,9 +6,7 @@ import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import thunkMiddleware from 'redux-thunk';
-import createSagaMiddleware from 'redux-saga';
 import createLogger from 'redux-logger';
-import rootSaga from './sagas';
 import App from './components/App.jsx';
 import About from './components/About';
 import NotFound from './components/NotFound';
@@ -17,7 +15,6 @@ import authReducer from './reducers/auth';
 import todosReducer from './reducers/todos';
 import * as actions from './actions';
 
-const sagaMiddleware = createSagaMiddleware();
 const loggerMiddleware = createLogger();
 const store = createStore(
   combineReducers({
@@ -26,9 +23,8 @@ const store = createStore(
     routing: routerReducer
   }),
   {},
-  applyMiddleware(thunkMiddleware, sagaMiddleware, loggerMiddleware)
+  applyMiddleware(thunkMiddleware, loggerMiddleware)
 );
-sagaMiddleware.run(rootSaga);
 
 const history = syncHistoryWithStore(browserHistory, store);
 store.dispatch(actions.requestFetchCurrentUser());

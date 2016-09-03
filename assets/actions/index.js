@@ -16,20 +16,27 @@ export function fetchTodos() {
   return { type: 'FETCH_TODOS' };
 }
 
-export function requestAddTodo(text) {
-  return { type: 'REQUEST_ADD_TODO', text };
-}
-
-export function requestUpdateTodo(id, params) {
-  return { type: 'REQUEST_UPDATE_TODO', id, params };
-}
-
 export function fetchAuthUser() {
   return { type: 'FETCH_AUTH_USER' };
 }
 
 export function setAuthUser(user) {
   return { type: 'SET_AUTH_USER', user };
+}
+
+export function requestFetchTodos() {
+  return (dispatch) => api.getTodos()
+    .then((json) => dispatch(setTodos(json.todos)));
+}
+
+export function requestAddTodo(text) {
+  return (dispatch) => api.addTodo(text)
+    .then((json) => dispatch(addTodo(json.todo)));
+}
+
+export function requestUpdateTodo(id, params) {
+  return (dispatch) => api.updateTodo(id, params)
+    .then((json) => dispatch(updateTodo(id, json.todo)));
 }
 
 export function requestFetchCurrentUser() {
