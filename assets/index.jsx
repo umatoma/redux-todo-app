@@ -14,6 +14,7 @@ import Home from './containers/Home';
 import authReducer from './reducers/auth';
 import todosReducer from './reducers/todos';
 import * as actions from './actions';
+import AuthWrapper from './lib/auth-wrapper.jsx';
 
 const loggerMiddleware = createLogger();
 const store = createStore(
@@ -29,10 +30,14 @@ const store = createStore(
 const history = syncHistoryWithStore(browserHistory, store);
 store.dispatch(actions.requestFetchCurrentUser());
 
+const authWrapper = new AuthWrapper({
+  redirectUrl: '/unauthorized',
+  authStateSelector: (state) => state.auth
+});
 render(
   <Provider store={store}>
     <Router history={history}>
-      <Route component={App}>
+      <Route component={authWrapper.wrapComponent(App)}>
         <Route path="/" component={Home} />
         <Route path="about" component={About} />
       </Route>
