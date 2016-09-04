@@ -4,6 +4,15 @@ import { connect } from 'react-redux';
 import Header from '../components/Header';
 
 class App extends React.Component {
+  static contextTypes = {
+    router: PropTypes.object.isRequired
+  };
+
+  static propTypes = {
+    children: PropTypes.element.isRequired,
+    auth: PropTypes.object.isRequired
+  };
+
   componentWillMount() {
     this.checkLoggedIn(this.props, this.context.router);
   }
@@ -28,15 +37,6 @@ class App extends React.Component {
     );
   }
 }
-
-App.contextTypes = {
-  router: PropTypes.object.isRequired
-};
-
-App.propTypes = {
-  children: PropTypes.element.isRequired,
-  auth: PropTypes.object.isRequired
-};
 
 const mapStateToProps = (state) => ({ auth: state.auth });
 
