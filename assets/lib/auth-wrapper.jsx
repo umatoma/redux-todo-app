@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import cssModules from 'react-css-modules';
-import styles from './style.css';
+import styles from './auth-wrapper.css';
 
 /**
  * React High Oder Component for User Authentication with React-Redux
