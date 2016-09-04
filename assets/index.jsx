@@ -16,7 +16,12 @@ import todosReducer from './reducers/todos';
 import * as actions from './actions';
 import AuthWrapper from './lib/auth-wrapper.jsx';
 
-const loggerMiddleware = createLogger();
+const middlewares = [thunkMiddleware];
+if (process.env.NODE_ENV === 'production') {
+  const loggerMiddleware = createLogger();
+  middlewares.push(loggerMiddleware);
+}
+
 const store = createStore(
   combineReducers({
     auth: authReducer,
@@ -24,7 +29,7 @@ const store = createStore(
     routing: routerReducer
   }),
   {},
-  applyMiddleware(thunkMiddleware, loggerMiddleware)
+  applyMiddleware(middlewares)
 );
 
 const history = syncHistoryWithStore(browserHistory, store);
