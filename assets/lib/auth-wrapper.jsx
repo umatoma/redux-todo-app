@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import cssModules from 'react-css-modules';
+import styles from './style.css';
 
 /**
  * React High Oder Component for User Authentication with React-Redux
@@ -15,7 +17,7 @@ import { connect } from 'react-redux';
 class AuthWrapper {
   static defaultOptions = {
     redirectUrl: '/unauthorized',
-    authStateSelector: (state, ownProps) => state.authData,
+    authStateSelector: (state) => state.authData,
     /**
      * @param {object} authData
      * @return {boolean}
@@ -49,6 +51,10 @@ class AuthWrapper {
         router: PropTypes.object.isRequired
       };
 
+      static propTypes = {
+        authData: PropTypes.object.isRequired
+      };
+
       componentWillMount() {
         this.redirectIfNotAuthenticated(this.props, this.context.router);
       }
@@ -65,11 +71,19 @@ class AuthWrapper {
       }
 
       render() {
+        const { authData } = this.props;
+        if (isAuthenticating(authData)) {
+          return (
+            <div className={styles.wrapper}>
+              <div className={styles.loader} />
+            </div>
+          );
+        }
         return <WrappedComponent {...this.props} />;
       }
     }
 
-    return connect(mapStateToProps)(Auth);
+    return connect(mapStateToProps)(cssModules(Auth, styles));
   }
 }
 

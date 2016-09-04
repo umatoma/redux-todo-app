@@ -27,7 +27,7 @@ module.exports = [
         },
         {
           test: /\.css$/,
-          loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
+          loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]')
         },
         {
           test: /\.(sass|scss)$/,
@@ -45,7 +45,9 @@ module.exports = [
           NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')
         }
       }),
-      new ExtractTextPlugin('style.bundle.css')
+      new ExtractTextPlugin('style.bundle.css', {
+        allChunks: true
+      })
     ]
   },
   {
