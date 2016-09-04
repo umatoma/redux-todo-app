@@ -41,12 +41,15 @@ class AuthWrapper {
    * @return {React.Component}
    */
   wrapComponent(WrappedComponent) {
+    const displayName = WrappedComponent.displayName;
     const { redirectUrl, authStateSelector, isAuthenticating, isAuthenticated } = this.options;
     const mapStateToProps = (state, ownProps) => ({
       authData: authStateSelector(state, ownProps)
     });
 
-    class Auth extends React.Component {
+    class AuthWrapperComponent extends React.Component {
+      static displayName = `${AuthWrapperComponent}(${displayName})`;
+
       static contextTypes = {
         router: PropTypes.object.isRequired
       };
@@ -83,7 +86,7 @@ class AuthWrapper {
       }
     }
 
-    return connect(mapStateToProps)(cssModules(Auth, styles));
+    return connect(mapStateToProps)(cssModules(AuthWrapperComponent, styles));
   }
 }
 
