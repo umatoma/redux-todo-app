@@ -133,7 +133,7 @@ describe('actions/index.js', () => {
         .reply(200, json);
 
       const store = mockStore({
-        auth: { isLoading: false, user: {} }
+        auth: { isFetching: false, user: {} }
       });
       return store.dispatch(actions.requestFetchCurrentUser())
         .then(() => {
@@ -149,7 +149,7 @@ describe('actions/index.js', () => {
 
     it('should not fetch current user info if already requesting', () => {
       const store = mockStore({
-        auth: { isLoading: true, user: {} }
+        auth: { isFetching: true, user: {} }
       });
       return store.dispatch(actions.requestFetchCurrentUser())
         .then(() => {

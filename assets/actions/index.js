@@ -16,12 +16,8 @@ export function fetchTodos() {
   return { type: 'FETCH_TODOS' };
 }
 
-export function fetchAuthUser() {
-  return { type: 'FETCH_AUTH_USER' };
-}
-
-export function setAuthUser(user) {
-  return { type: 'SET_AUTH_USER', user };
+export function fetchAuthUser({ status, payload, error }) {
+  return { type: 'FETCH_AUTH_USER', status, payload, error };
 }
 
 export function requestFetchTodos() {
@@ -42,12 +38,12 @@ export function requestUpdateTodo(id, params) {
 export function requestFetchCurrentUser() {
   return (dispatch, getState) => {
     const { auth } = getState();
-    if (auth.isLoading) {
+    if (auth.isFetching) {
       return Promise.resolve();
     }
-    dispatch(fetchAuthUser());
+    dispatch(fetchAuthUser({ status: 'REQUEST' }));
     return api.getCurrentUser()
-      .then((user) => dispatch(setAuthUser(user)))
-      .catch(() => dispatch(setAuthUser({})));
+      .then((user) => dispatch(fetchAuthUser({ status: 'SUCCESS', payload: user })))
+      .catch((e) => dispatch(fetchAuthUser({ status: 'FAILURE', error: e })));
   };
 }

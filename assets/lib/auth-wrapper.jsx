@@ -22,7 +22,7 @@ class AuthWrapper {
      * @param {object} authData
      * @return {boolean}
      */
-    isAuthenticating: (authData) => (authData.isLoading === true),
+    isAuthenticating: (authData) => (authData.isFetching === true),
     /**
      * @param {object} authData
      * @return {boolean}

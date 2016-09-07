@@ -5,7 +5,7 @@ import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory } from 'react-router';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
-import thunkMiddleware from 'redux-thunk';
+import { default as thunkMiddleware } from 'redux-thunk';
 import createLogger from 'redux-logger';
 import App from './components/App.jsx';
 import About from './components/About';
@@ -16,20 +16,14 @@ import todosReducer from './reducers/todos';
 import * as actions from './actions';
 import AuthWrapper from './lib/auth-wrapper.jsx';
 
-const middlewares = [thunkMiddleware];
-if (process.env.NODE_ENV === 'production') {
-  const loggerMiddleware = createLogger();
-  middlewares.push(loggerMiddleware);
-}
-
+const loggerMiddleware = createLogger();
 const store = createStore(
   combineReducers({
     auth: authReducer,
     todos: todosReducer,
     routing: routerReducer
   }),
-  {},
-  applyMiddleware(middlewares)
+  applyMiddleware(thunkMiddleware, loggerMiddleware)
 );
 
 const history = syncHistoryWithStore(browserHistory, store);
