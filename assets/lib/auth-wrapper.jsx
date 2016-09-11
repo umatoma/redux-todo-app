@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
-import cssModules from 'react-css-modules';
-import styles from './auth-wrapper.css';
 
 /**
  * React High Oder Component for User Authentication with React-Redux
@@ -77,8 +75,8 @@ class AuthWrapper {
         const { authData } = this.props;
         if (isAuthenticating(authData)) {
           return (
-            <div className={styles.wrapper}>
-              <div className={styles.loader} />
+            <div id="auth_wrapper">
+              <div className="loader" />
             </div>
           );
         }
@@ -86,7 +84,7 @@ class AuthWrapper {
       }
     }
 
-    return connect(mapStateToProps)(cssModules(AuthWrapperComponent, styles));
+    return connect(mapStateToProps)(AuthWrapperComponent);
   }
 }
 

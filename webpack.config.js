@@ -10,7 +10,7 @@ module.exports = [
     name: 'app',
     entry: [
       './assets/index.jsx',
-      './assets/index.sass'
+      './assets/index.scss'
     ],
     output: {
       path: path.join(__dirname, '/public/build'),
@@ -27,16 +27,21 @@ module.exports = [
         },
         {
           test: /\.css$/,
-          loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]')
+          loader: ExtractTextPlugin.extract('style', 'css')
         },
         {
           test: /\.(sass|scss)$/,
-          loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader')
+          loader: ExtractTextPlugin.extract('style', 'css!sass')
         },
         {
           test: /\.woff2?$|\.ttf$|\.eot$|\.svg$/,
           loader: 'file'
         }
+      ]
+    },
+    sassLoader: {
+      includePaths: [
+        path.resolve(__dirname, './node_modules/compass-mixins/lib')
       ]
     },
     plugins: [
