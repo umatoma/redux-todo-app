@@ -1,66 +1,66 @@
 import React, { PropTypes } from 'react';
 import { FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap';
-import { Field, reduxForm } from 'redux-form';
 
 class TodoForm extends React.Component {
-  static validate(values) {
-    const errors = {};
-    if (!values.text || values.text.trim().length === 0) {
-      errors.text = 'Invalid Text';
-    }
-
-    return errors;
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired
   }
 
-  static renderField({ input, meta: { touched, error } }) {
-    return (
-      <FormGroup validationState={touched && error && 'error'}>
-        <ControlLabel>Create Todo</ControlLabel>
-        <FormControl {...input} />
-        <FormControl.Feedback />
-        <HelpBlock>{touched ? error : null}</HelpBlock>
-      </FormGroup>
-    );
+  constructor() {
+    super();
+    this.state = {
+      text: '',
+      error: null
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.getValidationState = this.getValidationState.bind(this);
+    this.linkState = this.linkState.bind(this);
   }
 
-  constructor(props) {
-    super(props);
-    this.state = { text: '' };
-    this.onChange = this.onChange.bind(this);
-  }
-
-  onSubmit(value) {
-    const text = value.text.trim();
-    if (text) {
-      this.props.requestAddTodo(text);
+  getValidationState(key) {
+    const { text } = this.state;
+    switch (key) {
+      case 'text':
+        if (text.trim().length === 0) {
+          return 'error';
+        }
+        return null;
+      default:
+        return null;
     }
   }
 
-  onChange(value) {
-    console.log('onChange', value);
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props
+      .onSubmit(this.state)
+      .then(() => this.setState({ text: '', error: null }))
+      .catch((err) => this.setState({ error: err.message }));
+  }
+
+  linkState(key) {
+    return (e) => {
+      this.setState({ [key]: e.target.value });
+    };
   }
 
   render() {
-    const { handleSubmit } = this.props;
     return (
-      <form onSubmit={handleSubmit}>
-        <Field
-          name="text"
-          type="text"
-          placeholder="Enter text"
-          component={TodoForm.renderField}
-        />
+      <form onSubmit={this.handleSubmit}>
+        <FormGroup validationState={this.getValidationState('text')}>
+          <ControlLabel>Create Todo</ControlLabel>
+          <FormControl
+            type="text"
+            placeholder="Enter text"
+            value={this.state.text}
+            onChange={this.linkState('text')}
+          />
+          <FormControl.Feedback />
+          <HelpBlock>{this.state.error}</HelpBlock>
+        </FormGroup>
       </form>
     );
   }
 }
 
-TodoForm.propTypes = {
-  requestAddTodo: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired
-};
-
-export default reduxForm({
-  form: 'todoForm',
-  validate: TodoForm.validate
-})(TodoForm);
+export default TodoForm;
