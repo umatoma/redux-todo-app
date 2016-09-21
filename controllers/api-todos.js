@@ -1,40 +1,51 @@
 'use strict';
 
 const _ = require('lodash');
+const Promise = require('bluebird');
 
-module.exports.index = (req, res) => {
-  const knex = req.app.locals.knex;
-  knex.select('*')
-    .from('todos')
-    .where('user_id', 1)
-    .map((todo) => _.assign({}, todo, { completed: !!todo.completed }))
-    .then((todos) => res.json({ todos }))
-    .catch((err) => res.status(500).json({ error: err.message }));
+const exec = (fn) => (req, res, next) => {
+  Promise.coroutine(fn)(req, res, next)
+    .catch((err) => next(err));
 };
 
-module.exports.create = (req, res) => {
+module.exports.index = exec(function* index(req, res) {
+  const knex = req.app.locals.knex;
+  const todos = yield knex.select('*')
+    .from('todos')
+    .where('user_id', 1)
+    .map((todo) => _.assign({}, todo, { completed: !!todo.completed }));
+  res.json({ todos });
+});
+
+module.exports.create = exec(function* create(req, res) {
   const knex = req.app.locals.knex;
   const params = _.assign({}, req.body.todo, { user_id: 1, completed: false });
 
-  knex('todos')
-    .insert(params)
-    .then((id) => knex.first('*').from('todos').where('id', id))
-    .then((todo) => _.assign({}, todo, { completed: !!todo.completed }))
-    .then((todo) => res.json({ todo }))
-    .catch((err) => res.status(400).json({ error: err.message }));
-};
+  const ids = yield knex('todos').insert(params);
+  const todo = yield knex.first('*').from('todos').where('id', ids[0]);
+  if (!todo) {
+    const err = new Error('Not Found');
+    err.status = 404;
+    throw err;
+  }
+  res.json({
+    todo: _.assign({}, todo, { completed: !!todo.completed })
+  });
+});
 
-module.exports.update = (req, res) => {
+module.exports.update = exec(function* update(req, res) {
   const knex = req.app.locals.knex;
   const id = parseInt(req.params.id, 10);
-  const params = req.body.todo;
+  const params = _.pick(req.body.todo, ['text', 'completed']);
 
-  knex('todos')
-    .returning('id')
-    .where('id', id)
-    .update(_.pick(params, ['text', 'completed']))
-    .then(() => knex.first('*').from('todos').where('id', id))
-    .then((todo) => _.assign({}, todo, { completed: !!todo.completed }))
-    .then((todo) => res.json({ todo }))
-    .catch((err) => res.status(400).json({ error: err.message }));
-};
+  yield knex('todos').where('id', id).update(params);
+  const todo = yield knex.first('*').from('todos').where('id', id);
+  if (!todo) {
+    const err = new Error('Not Found');
+    err.status = 404;
+    throw err;
+  }
+  res.json({
+    todo: _.assign({}, todo, { completed: !!todo.completed })
+  });
+});

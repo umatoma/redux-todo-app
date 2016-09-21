@@ -24,6 +24,17 @@ app.locals.knex = knex;
 app.use(Express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(routes);
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
+  res.status(err.status || 500);
+  res.json('error', {
+    message: err.message
+  });
+});
 
 app.listen(port, (error) => {
   if (error) {

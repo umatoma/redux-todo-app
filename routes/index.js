@@ -26,13 +26,10 @@ router.get('/api/todos', ApiTodosCtrl.index);
 router.post('/api/todos', ApiTodosCtrl.create);
 router.put('/api/todos/:id', ApiTodosCtrl.update);
 
-router.all('/api/*', (req, res) => {
-  res.status(404).send({
-    error: {
-      status: 404,
-      message: 'Not Found'
-    }
-  });
+router.all('/api/*', (req, res, next) => {
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
 router.get('*', (req, res) => {
