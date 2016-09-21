@@ -7,9 +7,23 @@ const ApiTodosCtrl = require('../controllers/api-todos');
 const ApiUsersCtrl = require('../controllers/api-users');
 
 const router = express.Router(); // eslint-disable-line new-cap
-const exec = (fn) => (req, res, next) => {
-  Promise.coroutine(fn)(req, res, next)
-    .catch((err) => next(err));
+const isGenerator = (obj) => typeof obj.next === 'function' && typeof obj.throw === 'function';
+const isGeneratorFunction = (obj) => {
+  const constructor = obj.constructor;
+  if (!constructor) return false;
+  if (constructor.name === 'GeneratorFunction') return true;
+  if (constructor.displayName === 'GeneratorFunction') return true;
+  return isGenerator(constructor.prototype);
+};
+const exec = (fn) => {
+  if (isGeneratorFunction(fn)) {
+    return (req, res, next) => {
+      Promise.coroutine(fn)(req, res, next)
+        .catch((err) => next(err));
+    };
+  }
+
+  return fn;
 };
 
 /**
@@ -30,6 +44,7 @@ router.get('/api/users/current', ApiUsersCtrl.showCurrent);
 router.get('/api/todos', exec(ApiTodosCtrl.index));
 router.post('/api/todos', exec(ApiTodosCtrl.create));
 router.put('/api/todos/:id', exec(ApiTodosCtrl.update));
+router.get('/api/todos/not_generator', exec(ApiTodosCtrl.notGenerator));
 
 router.all('/api/*', (req, res, next) => {
   const err = new Error('Not Found');

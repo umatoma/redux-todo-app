@@ -43,3 +43,7 @@ module.exports.update = function* update(req, res) {
     todo: _.assign({}, todo, { completed: !!todo.completed })
   });
 };
+
+module.exports.notGenerator = (req, res) => {
+  res.send('This is not generator function.');
+};
