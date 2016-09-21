@@ -1,23 +1,17 @@
 'use strict';
 
 const _ = require('lodash');
-const Promise = require('bluebird');
 
-const exec = (fn) => (req, res, next) => {
-  Promise.coroutine(fn)(req, res, next)
-    .catch((err) => next(err));
-};
-
-module.exports.index = exec(function* index(req, res) {
+module.exports.index = function* index(req, res) {
   const knex = req.app.locals.knex;
   const todos = yield knex.select('*')
     .from('todos')
     .where('user_id', 1)
     .map((todo) => _.assign({}, todo, { completed: !!todo.completed }));
   res.json({ todos });
-});
+};
 
-module.exports.create = exec(function* create(req, res) {
+module.exports.create = function* create(req, res) {
   const knex = req.app.locals.knex;
   const params = _.assign({}, req.body.todo, { user_id: 1, completed: false });
 
@@ -31,9 +25,9 @@ module.exports.create = exec(function* create(req, res) {
   res.json({
     todo: _.assign({}, todo, { completed: !!todo.completed })
   });
-});
+};
 
-module.exports.update = exec(function* update(req, res) {
+module.exports.update = function* update(req, res) {
   const knex = req.app.locals.knex;
   const id = parseInt(req.params.id, 10);
   const params = _.pick(req.body.todo, ['text', 'completed']);
@@ -48,4 +42,4 @@ module.exports.update = exec(function* update(req, res) {
   res.json({
     todo: _.assign({}, todo, { completed: !!todo.completed })
   });
-});
+};

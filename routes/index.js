@@ -1,11 +1,16 @@
 'use strict';
 
 const path = require('path');
-const Express = require('express');
-const ApiTodosCtrl = require('../controllers/api-todos.js');
-const ApiUsersCtrl = require('../controllers/api-users.js');
+const express = require('express');
+const Promise = require('bluebird');
+const ApiTodosCtrl = require('../controllers/api-todos');
+const ApiUsersCtrl = require('../controllers/api-users');
 
-const router = Express.Router(); // eslint-disable-line new-cap
+const router = express.Router(); // eslint-disable-line new-cap
+const exec = (fn) => (req, res, next) => {
+  Promise.coroutine(fn)(req, res, next)
+    .catch((err) => next(err));
+};
 
 /**
  * Actions:
@@ -22,9 +27,9 @@ const router = Express.Router(); // eslint-disable-line new-cap
 router.get('/api/users/current', ApiUsersCtrl.showCurrent);
 
 // api/todos
-router.get('/api/todos', ApiTodosCtrl.index);
-router.post('/api/todos', ApiTodosCtrl.create);
-router.put('/api/todos/:id', ApiTodosCtrl.update);
+router.get('/api/todos', exec(ApiTodosCtrl.index));
+router.post('/api/todos', exec(ApiTodosCtrl.create));
+router.put('/api/todos/:id', exec(ApiTodosCtrl.update));
 
 router.all('/api/*', (req, res, next) => {
   const err = new Error('Not Found');
