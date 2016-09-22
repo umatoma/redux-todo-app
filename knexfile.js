@@ -9,6 +9,11 @@ module.exports = {
       database: 'redux_todo'
     },
     acquireConnectionTimeout: 5000,
+    pool: {
+      min: 2,
+      max: 10,
+      log: true
+    },
     migrations: {
       tableName: 'migrations'
     },
