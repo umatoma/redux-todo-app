@@ -8,6 +8,7 @@ module.exports = {
       user: 'root',
       database: 'redux_todo'
     },
+    acquireConnectionTimeout: 5000,
     migrations: {
       tableName: 'migrations'
     },
@@ -17,7 +18,7 @@ module.exports = {
     client: 'postgresql',
     connection: {
       database: 'my_db',
-      user:     'username',
+      user: 'username',
       password: 'password'
     },
     pool: {

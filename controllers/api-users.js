@@ -1,13 +1,11 @@
 'use strict';
 
 const retry = require('../lib/promise-retry');
+const logger = require('../lib/logger').getLogger();
 
 module.exports.showCurrent = (req, res) => {
   const knex = req.app.locals.knex;
-  retry()
-    .setDebug(true)
-    .setMaxTimes(5)
-    .setInterval(10)
+  retry({ maxTimes: 3, iterval: 10, logger })
     .execute(() => knex.first('*').from('users').where('id', 1))
     .then((user) => {
       if (user) {
