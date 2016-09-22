@@ -16,6 +16,7 @@ module.exports = {
   "rules": {
     "strict": "off",
     "comma-dangle": ["error", "never"],
-    "prefer-rest-params": "off"
+    "prefer-rest-params": "off",
+    "react/jsx-filename-extension": "off"
   }
 };

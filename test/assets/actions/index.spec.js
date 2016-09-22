@@ -138,11 +138,16 @@ describe('actions/index.js', () => {
       return store.dispatch(actions.requestFetchCurrentUser())
         .then(() => {
           expect(store.getActions()[0]).to.be.deep.equal({
-            type: 'FETCH_AUTH_USER'
+            type: 'FETCH_AUTH_USER',
+            error: undefined,
+            payload: undefined,
+            status: 'REQUEST'
           });
           expect(store.getActions()[1]).to.be.deep.equal({
-            type: 'SET_AUTH_USER',
-            user: json
+            type: 'FETCH_AUTH_USER',
+            error: undefined,
+            payload: { id: 'user_a' },
+            status: 'SUCCESS'
           });
         });
     });
