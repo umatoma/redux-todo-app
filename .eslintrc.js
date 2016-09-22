@@ -10,7 +10,8 @@ module.exports = {
     "context": true,
     "it": true,
     "beforeEach": true,
-    "afterEach": true
+    "afterEach": true,
+    "documentRef": true
   },
   "extends": "airbnb",
   "rules": {
