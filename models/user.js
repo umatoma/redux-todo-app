@@ -14,14 +14,9 @@ class User {
       maxTimes: 3,
       interval: 1000,
       logger,
-      isRetryableError: (err) => {
-        if (err.message === 'Pool is destroyed') {
-          knex.client.pool.destroy();
+      isRetryableError: () => {
+        if (!knex.client.pool || knex.client.pool.available.length === 0) {
           knex.client.initializePool(knex.client.config);
-          return true;
-        }
-
-        if (err.message.includes('Timeout acquiring a connection')) {
           return true;
         }
 
