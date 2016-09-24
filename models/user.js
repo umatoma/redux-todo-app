@@ -14,14 +14,7 @@ class User {
       maxTimes: 3,
       interval: 1000,
       logger,
-      isRetryableError: () => {
-        if (!knex.client.pool || knex.client.pool.available.length === 0) {
-          knex.client.initializePool(knex.client.config);
-          return true;
-        }
-
-        return false;
-      }
+      isRetryableError: (err) => !err.sqlState  // 接続出来ていればリトライしない
     })
     .execute(() => knex.first('*').from('users').where('id', id));
   }

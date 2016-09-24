@@ -8,11 +8,11 @@ module.exports = {
       user: 'root',
       database: 'redux_todo'
     },
-    acquireConnectionTimeout: 5000,
     pool: {
-      min: 2,
+      min: 0, // 1以上だとDBが死んでもプールインスタンスが残ってしまう？
       max: 10,
-      log: true
+      pingTimeout: 1000,
+      requestTimeout: 3000
     },
     migrations: {
       tableName: 'migrations'
