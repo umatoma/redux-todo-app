@@ -17,6 +17,21 @@ app.locals.knex = knex;
 
 app.use(Express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+  if (req.app.locals.knex && req.app.locals.knex.client.pool) {
+    const pool = req.app.locals.knex.client.pool;
+    console.log(
+      'name:%s\tsize:%s\tavailable:%s\twaiting:%s\tmax:%s\tmin:%s',
+      pool.getName(),
+      pool.getPoolSize(),
+      pool.availableObjectsCount(),
+      pool.waitingClientsCount(),
+      pool.getMaxPoolSize(),
+      pool.getMinPoolSize()
+    );
+  }
+  return next();
+});
 app.use(routes);
 app.use((req, res, next) => {
   const err = new Error('Not Found');
